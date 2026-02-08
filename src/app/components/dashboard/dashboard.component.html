@@ -1,0 +1,292 @@
+<div class="container-fluid py-4 dashboard-container">
+  <!-- Header mejorado -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="header-card p-4 rounded-4 shadow-sm">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+          <div>
+            <div class="d-flex align-items-center mb-2">
+              <div class="icon-badge bg-primary">
+                <i class="bi bi-grid-3x3-gap-fill"></i>
+              </div>
+              <h1 class="fw-bold mb-0 ms-3">Dashboard</h1>
+            </div>
+            <p class="text-muted mb-0 ms-5 ps-2">
+              <i class="bi bi-clock me-2"></i>
+              Bienvenido de nuevo - {{ obtenerSaludo() }}
+            </p>
+          </div>
+          <div class="stats-badge">
+            <div class="text-end">
+              <small class="text-muted d-block">Última actualización</small>
+              <strong class="text-primary">{{ obtenerFechaActual() }}</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  @if (cargando()) {
+    <div class="loading-container">
+      <div class="spinner-wrapper">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Cargando...</span>
+        </div>
+        <div class="loading-dots mt-3">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <p class="mt-3 text-muted fw-medium">Cargando estadísticas...</p>
+      </div>
+    </div>
+  } @else {
+    <!-- Tarjetas de Estadísticas Mejoradas -->
+    <div class="row g-4 mb-4">
+      <!-- Card Clientes -->
+      <div class="col-12 col-sm-6 col-xl-3">
+        <div class="stat-card stat-card-primary">
+          <div class="stat-card-body">
+            <div class="stat-header">
+              <div class="stat-icon-wrapper">
+                <div class="stat-icon bg-primary-subtle">
+                  <i class="bi bi-people-fill text-primary"></i>
+                </div>
+                <div class="stat-trend positive">
+                  <i class="bi bi-arrow-up-short"></i>
+                  <span>12%</span>
+                </div>
+              </div>
+            </div>
+            <div class="stat-content">
+              <h6 class="stat-label">Total Clientes</h6>
+              <h2 class="stat-number">{{ totalClientes() }}</h2>
+              <p class="stat-description">Clientes registrados</p>
+            </div>
+            <div class="stat-footer">
+              <a routerLink="/clientes" class="stat-link">
+                Ver todos
+                <i class="bi bi-arrow-right ms-1"></i>
+              </a>
+            </div>
+          </div>
+          <div class="stat-card-bg"></div>
+        </div>
+      </div>
+
+      <!-- Card Productos -->
+      <div class="col-12 col-sm-6 col-xl-3">
+        <div class="stat-card stat-card-success">
+          <div class="stat-card-body">
+            <div class="stat-header">
+              <div class="stat-icon-wrapper">
+                <div class="stat-icon bg-success-subtle">
+                  <i class="bi bi-box-seam-fill text-success"></i>
+                </div>
+                @if (productosBajoStock() > 0) {
+                  <div class="stat-badge warning">
+                    <i class="bi bi-exclamation-circle"></i>
+                    {{ productosBajoStock() }}
+                  </div>
+                }
+              </div>
+            </div>
+            <div class="stat-content">
+              <h6 class="stat-label">Total Productos</h6>
+              <h2 class="stat-number">{{ totalProductos() }}</h2>
+              <p class="stat-description" *ngIf="productosBajoStock() > 0">
+                <i class="bi bi-exclamation-triangle-fill text-warning me-1"></i>
+                {{ productosBajoStock() }} productos bajo stock
+              </p>
+              <p class="stat-description" *ngIf="productosBajoStock() === 0">
+                Inventario completo
+              </p>
+            </div>
+            <div class="stat-footer">
+              <a routerLink="/productos" class="stat-link">
+                Gestionar
+                <i class="bi bi-arrow-right ms-1"></i>
+              </a>
+            </div>
+          </div>
+          <div class="stat-card-bg"></div>
+        </div>
+      </div>
+
+      <!-- Card Órdenes -->
+      <div class="col-12 col-sm-6 col-xl-3">
+        <div class="stat-card stat-card-info">
+          <div class="stat-card-body">
+            <div class="stat-header">
+              <div class="stat-icon-wrapper">
+                <div class="stat-icon bg-info-subtle">
+                  <i class="bi bi-clipboard-check-fill text-info"></i>
+                </div>
+                <div class="stat-trend positive">
+                  <i class="bi bi-arrow-up-short"></i>
+                  <span>8%</span>
+                </div>
+              </div>
+            </div>
+            <div class="stat-content">
+              <h6 class="stat-label">Total Órdenes</h6>
+              <h2 class="stat-number">{{ totalOrdenes() }}</h2>
+              <p class="stat-description">Órdenes procesadas</p>
+            </div>
+            <div class="stat-footer">
+              <a routerLink="/ordenes" class="stat-link">
+                Ver historial
+                <i class="bi bi-arrow-right ms-1"></i>
+              </a>
+            </div>
+          </div>
+          <div class="stat-card-bg"></div>
+        </div>
+      </div>
+
+      <!-- Card Ventas -->
+      <div class="col-12 col-sm-6 col-xl-3">
+        <div class="stat-card stat-card-warning">
+          <div class="stat-card-body">
+            <div class="stat-header">
+              <div class="stat-icon-wrapper">
+                <div class="stat-icon bg-warning-subtle">
+                  <i class="bi bi-currency-dollar text-warning"></i>
+                </div>
+                <div class="stat-trend positive">
+                  <i class="bi bi-arrow-up-short"></i>
+                  <span>24%</span>
+                </div>
+              </div>
+            </div>
+            <div class="stat-content">
+              <h6 class="stat-label">Total Ventas</h6>
+              <h2 class="stat-number text-success">
+                L {{ totalVentas().toLocaleString('es-HN', {minimumFractionDigits: 2}) }}
+              </h2>
+              <p class="stat-description">
+                <i class="bi bi-info-circle me-1"></i>
+                Incluye ISV (15%)
+              </p>
+            </div>
+            <div class="stat-footer">
+              <span class="stat-link opacity-50">
+                <i class="bi bi-graph-up me-1"></i>
+                Ingresos totales
+              </span>
+            </div>
+          </div>
+          <div class="stat-card-bg"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sección de Acciones Rápidas Mejorada -->
+    <div class="row g-4">
+      <!-- Acceso Rápido -->
+      <div class="col-12 col-lg-8">
+        <div class="action-card">
+          <div class="action-card-header">
+            <div class="d-flex align-items-center">
+              <div class="icon-badge bg-gradient-primary me-3">
+                <i class="bi bi-lightning-charge-fill"></i>
+              </div>
+              <div>
+                <h5 class="mb-0 fw-bold">Acciones Rápidas</h5>
+                <small class="text-muted">Accede rápidamente a las funciones principales</small>
+              </div>
+            </div>
+          </div>
+          <div class="action-card-body">
+            <div class="row g-3">
+              <div class="col-12 col-md-4">
+                <a routerLink="/clientes" class="action-button action-button-primary">
+                  <div class="action-button-icon">
+                    <i class="bi bi-people-fill"></i>
+                  </div>
+                  <div class="action-button-content">
+                    <h6 class="mb-0">Clientes</h6>
+                    <small>Gestionar base de datos</small>
+                  </div>
+                  <i class="bi bi-arrow-right action-button-arrow"></i>
+                </a>
+              </div>
+              <div class="col-12 col-md-4">
+                <a routerLink="/productos" class="action-button action-button-success">
+                  <div class="action-button-icon">
+                    <i class="bi bi-box-seam-fill"></i>
+                  </div>
+                  <div class="action-button-content">
+                    <h6 class="mb-0">Productos</h6>
+                    <small>Inventario y catálogo</small>
+                  </div>
+                  <i class="bi bi-arrow-right action-button-arrow"></i>
+                </a>
+              </div>
+              <div class="col-12 col-md-4">
+                <a routerLink="/ordenes" class="action-button action-button-info">
+                  <div class="action-button-icon">
+                    <i class="bi bi-plus-circle-fill"></i>
+                  </div>
+                  <div class="action-button-content">
+                    <h6 class="mb-0">Nueva Orden</h6>
+                    <small>Crear pedido nuevo</small>
+                  </div>
+                  <i class="bi bi-arrow-right action-button-arrow"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel de Información -->
+      <div class="col-12 col-lg-4">
+        <div class="info-card">
+          <div class="info-card-header">
+            <h6 class="mb-0 fw-bold">
+              <i class="bi bi-lightbulb-fill text-warning me-2"></i>
+              Consejos
+            </h6>
+          </div>
+          <div class="info-card-body">
+            <div class="info-item" *ngIf="productosBajoStock() > 0">
+              <div class="info-icon bg-warning-subtle">
+                <i class="bi bi-exclamation-triangle text-warning"></i>
+              </div>
+              <div class="info-content">
+                <h6 class="mb-1">Stock bajo</h6>
+                <p class="mb-0 small text-muted">
+                  Hay {{ productosBajoStock() }} productos que necesitan reabastecimiento
+                </p>
+              </div>
+            </div>
+            <div class="info-item">
+              <div class="info-icon bg-success-subtle">
+                <i class="bi bi-graph-up-arrow text-success"></i>
+              </div>
+              <div class="info-content">
+                <h6 class="mb-1">Rendimiento</h6>
+                <p class="mb-0 small text-muted">
+                  Las ventas han aumentado un 24% este mes
+                </p>
+              </div>
+            </div>
+            <div class="info-item mb-0">
+              <div class="info-icon bg-info-subtle">
+                <i class="bi bi-calendar-check text-info"></i>
+              </div>
+              <div class="info-content">
+                <h6 class="mb-1">Recordatorio</h6>
+                <p class="mb-0 small text-muted">
+                  Revisar órdenes pendientes de entrega
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</div>

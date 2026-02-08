@@ -1,0 +1,211 @@
+<div class="container-fluid py-4">
+  <!-- Header -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="page-header">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+          <div>
+            <div class="d-flex align-items-center mb-2">
+              <div class="icon-badge bg-primary">
+                <i class="bi bi-people-fill"></i>
+              </div>
+              <h1 class="fw-bold mb-0 ms-3">Gestión de Clientes</h1>
+            </div>
+            <p class="text-muted mb-0 ms-5 ps-2">
+              <i class="bi bi-info-circle me-2"></i>
+              Administra tu base de clientes
+            </p>
+          </div>
+          <div>
+            <button (click)="abrirFormulario()" class="btn btn-primary btn-lg shadow-sm">
+              <i class="bi bi-plus-circle-fill me-2"></i>
+              Nuevo Cliente
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Alert de error -->
+  @if (error()) {
+    <div class="row mb-4">
+      <div class="col-12">
+        <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+          <i class="bi bi-exclamation-triangle-fill me-2"></i>
+          {{ error() }}
+          <button type="button" class="btn-close" aria-label="Close"></button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Formulario -->
+  @if (mostrarFormulario()) {
+    <div class="row mb-4">
+      <div class="col-12">
+        <div class="form-card">
+          <div class="form-card-header">
+            <div class="d-flex align-items-center">
+              <div class="icon-badge-sm bg-primary me-3">
+                <i class="bi bi-person-{{ clienteEditandoId() ? 'gear' : 'plus' }}-fill"></i>
+              </div>
+              <div>
+                <h4 class="mb-0 fw-bold">
+                  {{ clienteEditandoId() ? 'Actualizar' : 'Crear' }} Cliente
+                </h4>
+                <small class="text-muted">
+                  Completa la información requerida
+                </small>
+              </div>
+            </div>
+            <button type="button" (click)="cerrarFormulario()" class="btn-close-custom">
+              <i class="bi bi-x-lg"></i>
+            </button>
+          </div>
+          <div class="form-card-body">
+            <form (ngSubmit)="guardarCliente()">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <div class="form-floating">
+                    <input 
+                      type="text" 
+                      class="form-control form-control-lg"
+                      id="nombre"
+                      [(ngModel)]="formularioCliente().nombre" 
+                      name="nombre"
+                      placeholder="Nombre completo"
+                    />
+                    <label for="nombre">
+                      <i class="bi bi-person me-2"></i>
+                      Nombre Completo
+                    </label>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-floating">
+                    <input 
+                      type="text" 
+                      class="form-control form-control-lg"
+                      id="identidad"
+                      [(ngModel)]="formularioCliente().identidad" 
+                      name="identidad"
+                      placeholder="Número de identidad"
+                    />
+                    <label for="identidad">
+                      <i class="bi bi-card-text me-2"></i>
+                      Identidad (Cédula/RUC)
+                    </label>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="form-actions">
+                <button type="button" (click)="cerrarFormulario()" class="btn btn-lg btn-light">
+                  <i class="bi bi-x-circle me-2"></i>
+                  Cancelar
+                </button>
+                <button type="submit" class="btn btn-lg btn-success">
+                  <i class="bi bi-check-circle-fill me-2"></i>
+                  Guardar
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Loading -->
+  @if (cargando()) {
+    <div class="row">
+      <div class="col-12">
+        <div class="loading-container">
+          <div class="text-center">
+            <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+              <span class="visually-hidden">Cargando...</span>
+            </div>
+            <p class="mt-3 text-muted">Cargando clientes...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  } 
+  
+  <!-- Empty state -->
+  @else if (clientes().length === 0) {
+    <div class="row">
+      <div class="col-12">
+        <div class="empty-state-card">
+          <div class="empty-state-icon">
+            <i class="bi bi-people"></i>
+          </div>
+          <h3 class="fw-bold mb-3">No hay clientes registrados</h3>
+          <p class="text-muted mb-4">
+            Comienza agregando tu primer cliente
+          </p>
+          <button (click)="abrirFormulario()" class="btn btn-primary btn-lg">
+            <i class="bi bi-plus-circle-fill me-2"></i>
+            Crear primer cliente
+          </button>
+        </div>
+      </div>
+    </div>
+  } 
+  
+  <!-- Tabla de clientes -->
+  @else {
+    <div class="row">
+      <div class="col-12">
+        <div class="table-card">
+          <div class="table-card-header">
+            <h5 class="mb-0 fw-bold">
+              <i class="bi bi-table me-2"></i>
+              Lista de Clientes
+            </h5>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead>
+                <tr>
+                  <th class="ps-4">Nombre</th>
+                  <th>Identidad</th>
+                  <th class="text-center">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (cliente of clientes(); track cliente.clienteId) {
+                  <tr>
+                    <td class="ps-4">
+                      <div class="fw-semibold text-dark">{{ cliente.nombre }}</div>
+                    </td>
+                    <td>
+                      <span class="text-muted">{{ cliente.identidad }}</span>
+                    </td>
+                    <td>
+                      <div class="d-flex gap-2 justify-content-center">
+                        <button 
+                          (click)="editarCliente(cliente)" 
+                          class="btn btn-sm btn-warning">
+                          <i class="bi bi-pencil-square me-1"></i>
+                          Editar
+                        </button>
+                        <button 
+                          (click)="eliminarCliente(cliente.clienteId)" 
+                          class="btn btn-sm btn-danger">
+                          <i class="bi bi-trash3 me-1"></i>
+                          Eliminar
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</div>

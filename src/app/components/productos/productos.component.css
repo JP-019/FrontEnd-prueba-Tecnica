@@ -1,0 +1,321 @@
+/* Variables */
+:root {
+  --success-gradient: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.1);
+  --border-radius: 16px;
+  --transition: all 0.3s ease;
+}
+
+/* Page Header */
+.page-header {
+  background: white;
+  padding: 2rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.icon-badge {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.75rem;
+  color: white;
+  background: var(--success-gradient);
+  box-shadow: 0 4px 12px rgba(17, 153, 142, 0.3);
+}
+
+.icon-badge-sm {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: white;
+  background: var(--success-gradient);
+}
+
+/* Form Card */
+.form-card {
+  background: white;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.form-card-header {
+  padding: 1.5rem 2rem;
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.btn-close-custom {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: none;
+  background: rgba(0, 0, 0, 0.05);
+  color: #666;
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-close-custom:hover {
+  background: rgba(220, 53, 69, 0.1);
+  color: #dc3545;
+  transform: rotate(90deg);
+}
+
+.form-card-body {
+  padding: 2rem;
+}
+
+.form-floating > label {
+  color: #6c757d;
+  font-weight: 500;
+}
+
+.form-control:focus {
+  border-color: #11998e;
+  box-shadow: 0 0 0 0.25rem rgba(17, 153, 142, 0.15);
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Loading */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+  background: white;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Empty State */
+.empty-state-card {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: white;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-sm);
+  border: 2px dashed rgba(0, 0, 0, 0.1);
+}
+
+.empty-state-icon {
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 2rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 4rem;
+}
+
+/* Table Card */
+.table-card {
+  background: white;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.table-card-header {
+  padding: 1.5rem 2rem;
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Table */
+.table thead th {
+  background: #f8f9fa;
+  border-bottom: 2px solid #dee2e6;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.813rem;
+  letter-spacing: 0.5px;
+  color: #495057;
+  padding: 1rem;
+}
+
+.table tbody td {
+  padding: 1rem;
+  vertical-align: middle;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.table tbody tr {
+  transition: var(--transition);
+}
+
+.table tbody tr:hover {
+  background-color: rgba(17, 153, 142, 0.02);
+  box-shadow: inset 3px 0 0 #11998e;
+}
+
+/* Fila de advertencia para stock bajo */
+.table-warning-subtle {
+  background-color: rgba(255, 193, 7, 0.05) !important;
+}
+
+.table-warning-subtle:hover {
+  background-color: rgba(255, 193, 7, 0.1) !important;
+  box-shadow: inset 3px 0 0 #ffc107 !important;
+}
+
+/* Product Icon */
+.product-icon {
+  width: 45px;
+  height: 45px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(17, 153, 142, 0.1) 0%, rgba(56, 239, 125, 0.1) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  color: #11998e;
+}
+
+/* Stock Badge */
+.stock-badge-container {
+  display: flex;
+  align-items: center;
+}
+
+.stock-badge-container .badge {
+  padding: 0.5rem 0.75rem;
+  font-weight: 600;
+  font-size: 0.813rem;
+}
+
+/* Buttons */
+.btn {
+  transition: var(--transition);
+  font-weight: 500;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+.btn-warning:hover {
+  box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
+}
+
+.btn-danger:hover {
+  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+}
+
+.btn-success:hover {
+  box-shadow: 0 4px 12px rgba(25, 135, 84, 0.3);
+}
+
+/* Badge personalizado */
+.badge {
+  display: inline-flex;
+  align-items: center;
+}
+
+.bg-success-subtle {
+  background-color: rgba(25, 135, 84, 0.1) !important;
+}
+
+.bg-warning-subtle {
+  background-color: rgba(255, 193, 7, 0.1) !important;
+}
+
+/* Animación de pulso para stock crítico */
+@keyframes pulse-warning {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.table-warning-subtle .badge.bg-danger {
+  animation: pulse-warning 2s infinite;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .page-header {
+    padding: 1.5rem;
+  }
+  
+  .form-card-body {
+    padding: 1.5rem;
+  }
+  
+  .table-card-header {
+    padding: 1rem;
+  }
+  
+  .icon-badge {
+    width: 48px;
+    height: 48px;
+    font-size: 1.5rem;
+  }
+  
+  .product-icon {
+    width: 35px;
+    height: 35px;
+    font-size: 1rem;
+  }
+  
+  .btn span {
+    display: none;
+  }
+  
+  .stock-badge-container .badge {
+    font-size: 0.75rem;
+    padding: 0.4rem 0.6rem;
+  }
+}
+
+/* Mejora visual para inputs de número */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

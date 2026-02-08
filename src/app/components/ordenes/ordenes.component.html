@@ -1,0 +1,395 @@
+<div class="container-fluid py-4">
+  <!-- Header -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="page-header">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+          <div>
+            <div class="d-flex align-items-center mb-2">
+              <div class="icon-badge bg-info">
+                <i class="bi bi-clipboard-check-fill"></i>
+              </div>
+              <h1 class="fw-bold mb-0 ms-3">Gestión de Órdenes</h1>
+            </div>
+            <p class="text-muted mb-0 ms-5 ps-2">
+              <i class="bi bi-info-circle me-2"></i>
+              Administra las órdenes de compra
+            </p>
+          </div>
+          <div>
+            <button (click)="abrirFormularioOrden()" class="btn btn-primary btn-lg shadow-sm">
+              <i class="bi bi-plus-circle-fill me-2"></i>
+              Nueva Orden
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Alert de error -->
+  @if (error()) {
+    <div class="row mb-4">
+      <div class="col-12">
+        <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+          <i class="bi bi-exclamation-triangle-fill me-2"></i>
+          {{ error() }}
+          <button type="button" class="btn-close" aria-label="Close"></button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Formulario de Nueva Orden -->
+  @if (mostrarFormularioOrden()) {
+    <div class="row mb-4">
+      <div class="col-12">
+        <div class="form-card">
+          <div class="form-card-header">
+            <div class="d-flex align-items-center">
+              <div class="icon-badge-sm bg-info me-3">
+                <i class="bi bi-file-earmark-plus-fill"></i>
+              </div>
+              <div>
+                <h4 class="mb-0 fw-bold">Crear Nueva Orden</h4>
+                <small class="text-muted">Selecciona el cliente para la orden</small>
+              </div>
+            </div>
+            <button type="button" (click)="cerrarFormularioOrden()" class="btn-close-custom">
+              <i class="bi bi-x-lg"></i>
+            </button>
+          </div>
+          <div class="form-card-body">
+            <form (ngSubmit)="crearOrden()">
+              <div class="row">
+                <div class="col-12">
+                  <div class="form-floating">
+                    <select 
+                      class="form-select form-select-lg" 
+                      id="clienteId"
+                      [(ngModel)]="formularioOrden().clienteId" 
+                      name="clienteId" 
+                      required
+                    >
+                      <option value="">-- Selecciona un cliente --</option>
+                      @for (cliente of clientes(); track cliente.clienteId) {
+                        <option [value]="cliente.clienteId">{{ cliente.nombre }}</option>
+                      }
+                    </select>
+                    <label for="clienteId">
+                      <i class="bi bi-person-circle me-2"></i>
+                      Cliente
+                    </label>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="form-actions">
+                <button type="button" (click)="cerrarFormularioOrden()" class="btn btn-lg btn-light">
+                  <i class="bi bi-x-circle me-2"></i>
+                  Cancelar
+                </button>
+                <button type="submit" class="btn btn-lg btn-success">
+                  <i class="bi bi-check-circle-fill me-2"></i>
+                  Crear Orden
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Loading -->
+  @if (cargando()) {
+    <div class="row">
+      <div class="col-12">
+        <div class="loading-container">
+          <div class="text-center">
+            <div class="spinner-border text-info" role="status" style="width: 3rem; height: 3rem;">
+              <span class="visually-hidden">Cargando...</span>
+            </div>
+            <p class="mt-3 text-muted">Cargando órdenes...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  } 
+  
+  <!-- Empty state -->
+  @else if (ordenes().length === 0) {
+    <div class="row">
+      <div class="col-12">
+        <div class="empty-state-card">
+          <div class="empty-state-icon bg-info-subtle">
+            <i class="bi bi-clipboard-x text-info"></i>
+          </div>
+          <h3 class="fw-bold mb-3">No hay órdenes registradas</h3>
+          <p class="text-muted mb-4">
+            Comienza creando tu primera orden de compra
+          </p>
+          <button (click)="abrirFormularioOrden()" class="btn btn-primary btn-lg">
+            <i class="bi bi-plus-circle-fill me-2"></i>
+            Crear primera orden
+          </button>
+        </div>
+      </div>
+    </div>
+  } 
+  
+  <!-- Tabla de órdenes -->
+  @else {
+    <div class="row">
+      <div class="col-12">
+        <div class="table-card">
+          <div class="table-card-header">
+            <h5 class="mb-0 fw-bold">
+              <i class="bi bi-list-ul me-2"></i>
+              Lista de Órdenes
+            </h5>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead>
+                <tr>
+                  <th class="ps-4">ID Orden</th>
+                  <th>Cliente</th>
+                  <th>Subtotal</th>
+                  <th>Impuesto (15%)</th>
+                  <th>Total</th>
+                  <th class="text-center">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (orden of ordenes(); track orden.ordenId) {
+                  <tr>
+                    <td class="ps-4">
+                      <span class="badge bg-info-subtle text-info fw-bold">
+                        #{{ orden.ordenId }}
+                      </span>
+                    </td>
+                    <td>
+                      <div class="d-flex align-items-center">
+                        <i class="bi bi-person-circle text-muted me-2"></i>
+                        <span class="fw-semibold">{{ getNombreCliente(orden.clienteId) }}</span>
+                      </div>
+                    </td>
+                    <td>
+                      <span class="text-muted">L {{ orden.subtotal.toFixed(2) }}</span>
+                    </td>
+                    <td>
+                      <span class="text-muted">L {{ orden.impuesto.toFixed(2) }}</span>
+                    </td>
+                    <td>
+                      <span class="fw-bold text-success">L {{ orden.total.toFixed(2) }}</span>
+                    </td>
+                    <td>
+                      <div class="d-flex gap-2 justify-content-center">
+                        <button 
+                          (click)="verDetalles(orden.ordenId)" 
+                          class="btn btn-sm btn-info">
+                          <i class="bi bi-eye me-1"></i>
+                          Ver Detalles
+                        </button>
+                        <button 
+                          (click)="eliminarOrden(orden.ordenId)" 
+                          class="btn btn-sm btn-danger">
+                          <i class="bi bi-trash3 me-1"></i>
+                          Eliminar
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Modal de Detalles -->
+  @if (mostrarDetalles()) {
+    <div class="modal-overlay" (click)="cerrarDetalles()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header-custom">
+          <div class="d-flex align-items-center">
+            <div class="icon-badge-sm bg-info me-3">
+              <i class="bi bi-box-seam-fill"></i>
+            </div>
+            <div>
+              <h4 class="mb-0 fw-bold">Detalles de Orden</h4>
+              <small class="text-muted">Orden #{{ ordenSeleccionadaId() }}</small>
+            </div>
+          </div>
+          <button (click)="cerrarDetalles()" class="btn-close-custom">
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </div>
+
+        <div class="modal-body-custom">
+          <!-- Resumen de orden -->
+          @if (getOrdenActual(); as orden) {
+            <div class="resumen-orden-card mb-4">
+              <div class="resumen-item">
+                <span class="resumen-label">Subtotal:</span>
+                <span class="resumen-value">L {{ orden.subtotal.toFixed(2) }}</span>
+              </div>
+              <div class="resumen-item">
+                <span class="resumen-label">Impuesto (15%):</span>
+                <span class="resumen-value">L {{ orden.impuesto.toFixed(2) }}</span>
+              </div>
+              <div class="resumen-item resumen-total">
+                <span class="resumen-label">Total:</span>
+                <span class="resumen-value">L {{ orden.total.toFixed(2) }}</span>
+              </div>
+            </div>
+          }
+
+          <!-- Botón agregar producto -->
+          @if (!mostrarAgregarProducto()) {
+            <button (click)="abrirAgregarProducto()" class="btn btn-success btn-lg w-100 mb-4">
+              <i class="bi bi-plus-circle-fill me-2"></i>
+              Agregar Producto
+            </button>
+          }
+
+          <!-- Formulario agregar producto -->
+          @if (mostrarAgregarProducto()) {
+            <div class="agregar-producto-card mb-4">
+              <h5 class="fw-bold mb-3">
+                <i class="bi bi-box-seam me-2"></i>
+                Agregar Producto
+              </h5>
+              <form (ngSubmit)="agregarProductoAOrden()">
+                <div class="row g-3">
+                  <div class="col-md-8">
+                    <div class="form-floating">
+                      <select 
+                        class="form-select" 
+                        id="productoId"
+                        [(ngModel)]="formularioProducto().productoId" 
+                        name="productoId" 
+                        required
+                      >
+                        <option value="">-- Selecciona un producto --</option>
+                        @for (producto of productos(); track producto.productoId) {
+                          <option 
+                            [value]="producto.productoId"
+                            [disabled]="producto.exitencia === 0"
+                          >
+                            {{ producto.nombre }} - L{{ producto.precio }} (Stock: {{ producto.exitencia }})
+                          </option>
+                        }
+                      </select>
+                      <label for="productoId">
+                        <i class="bi bi-box me-2"></i>
+                        Producto
+                      </label>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-floating">
+                      <input 
+                        type="number" 
+                        class="form-control"
+                        id="cantidad"
+                        [(ngModel)]="formularioProducto().cantidad" 
+                        name="cantidad"
+                        min="1"
+                        required
+                      />
+                      <label for="cantidad">
+                        <i class="bi bi-123 me-2"></i>
+                        Cantidad
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="d-flex gap-2 mt-3">
+                  <button type="button" (click)="cerrarAgregarProducto()" class="btn btn-light flex-fill">
+                    <i class="bi bi-x-circle me-2"></i>
+                    Cancelar
+                  </button>
+                  <button type="submit" class="btn btn-success flex-fill">
+                    <i class="bi bi-check-circle-fill me-2"></i>
+                    Agregar
+                  </button>
+                </div>
+              </form>
+            </div>
+          }
+
+          <!-- Tabla de detalles -->
+          @if (detallesActuales().length === 0) {
+            <div class="empty-detalles-card">
+              <i class="bi bi-inbox text-muted mb-3" style="font-size: 3rem;"></i>
+              <p class="text-muted mb-0">No hay productos en esta orden</p>
+            </div>
+          } @else {
+            <div class="detalles-table-container">
+              <h5 class="fw-bold mb-3">
+                <i class="bi bi-cart-check me-2"></i>
+                Productos en la Orden
+              </h5>
+              <div class="table-responsive">
+                <table class="table table-sm table-hover align-middle mb-0">
+                  <thead>
+                    <tr>
+                      <th>Producto</th>
+                      <th class="text-center">Cantidad</th>
+                      <th>Precio Unit.</th>
+                      <th>Subtotal</th>
+                      <th>Impuesto</th>
+                      <th>Total</th>
+                      <th class="text-center">Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (detalle of detallesActuales(); track detalle.detalleOrdenId) {
+                      <tr>
+                        <td>
+                          <div class="fw-semibold">{{ getNombreProducto(detalle.productoId) }}</div>
+                        </td>
+                        <td class="text-center">
+                          <input 
+                            type="number" 
+                            [(ngModel)]="detalle.cantidad"
+                            (change)="actualizarCantidad(detalle.detalleOrdenId, detalle.cantidad)"
+                            min="1"
+                            class="form-control form-control-sm text-center input-cantidad"
+                            style="width: 70px; margin: 0 auto;"
+                          />
+                        </td>
+                        <td>
+                          <span class="text-muted">L {{ (detalle.subtotal / detalle.cantidad).toFixed(2) }}</span>
+                        </td>
+                        <td>
+                          <span class="text-muted">L {{ detalle.subtotal.toFixed(2) }}</span>
+                        </td>
+                        <td>
+                          <span class="text-muted">L {{ detalle.impuesto.toFixed(2) }}</span>
+                        </td>
+                        <td>
+                          <span class="fw-bold text-success">L {{ detalle.total.toFixed(2) }}</span>
+                        </td>
+                        <td class="text-center">
+                          <button 
+                            (click)="removerProducto(detalle.detalleOrdenId)" 
+                            class="btn btn-sm btn-danger">ELIMINAR
+                          </button>
+                        </td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  }
+</div>
