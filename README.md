@@ -1,14 +1,17 @@
-Instalar Angular CLI: npm install -g @angular/cli
+# 1. Verificar si Angular CLI está instalado
+ng version
 
-Verificar Angular: ng version
+# Si no está instalado, instalar globalmente
+npm install -g @angular/cli
 
-Clonar el repositorio con Git
+# 2. Clonar el repositorio
+git clone <URL-del-repositorio>
 
-Entrar a la carpeta del proyecto: cd nombre-del-proyecto
+# 3. Entrar a la carpeta del frontend
+cd ~/Desktop/Ejemplo/api/frontend
 
-Instalar dependencias: npm install
+# 4. Instalar dependencias del proyecto
+npm install
 
-Ejecutar el proyecto: ng serve
-
-
-hecha en base a la API REST
+# 5. Ejecutar el proyecto
+ng serve
